@@ -1,0 +1,15 @@
+{
+	"timestamp": "Now",
+	"moon_phase": "Waxing Crescent",
+	"illumination": 10.2,
+	"azimuth": 123.4,
+	"altitude": 30.0,
+	"moonrise": "5:44 AM",
+	"moonset": "6:21 PM",
+	"tide": {
+		"next_type": "High",
+		"next_time": "7:30 PM",
+		"height_m": 1.5,
+		"state": "Rising"
+	}
+}
