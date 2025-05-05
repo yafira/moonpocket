@@ -9,7 +9,7 @@ app.use(express.static('public'))
 
 app.post('/moonpocket', (req, res) => {
 	const data = req.body
-	console.log('📩 Data received from Arduino:', data)
+	console.log('📩 Data received:', data)
 
 	fs.writeFileSync(
 		path.join(__dirname, 'public', 'moonpocket-data.json'),
@@ -19,5 +19,5 @@ app.post('/moonpocket', (req, res) => {
 })
 
 app.listen(PORT, () => {
-	console.log(`🚀 Server running on http://localhost:${PORT}`)
+	console.log(`🚀 Server running at http://localhost:${PORT}`)
 })
