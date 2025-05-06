@@ -45,45 +45,39 @@ function icon(name, size = 20) {
 fetch('moonpocket-data.json')
 	.then((res) => res.json())
 	.then((data) => {
-		// 🌙 MOON INFO
+		// Moon Info
 		let moonHTML = `
-      <h2>${icon('moon')}Moon Info</h2>
-      <p><strong>${data.moon_phase.replace(
+		  <h2>${icon('moon')}Moon Info</h2>
+		  <p><strong>${data.moon_phase.replace(
 				'_',
 				' '
 			)}</strong> (${data.illumination?.toFixed(1)}% illuminated)</p>
-      ${
-				data.moon_age
-					? `<p>${icon('calendar')}Age: ${data.moon_age} days</p>`
-					: ''
-			}
-      <p>${icon('thermometer')}Distance: ${data.distance_km} km</p>
-      <div id="moon-svg" style="display: flex; justify-content: center; margin-top: 16px;"></div>
-    `
+		  ${data.moon_age ? `<p>${icon('calendar')}Age: ${data.moon_age} days</p>` : ''}
+		  <p>${icon('thermometer')}Distance: ${data.distance_km} km</p>
+		  <div id="moon-svg" style="display: flex; justify-content: center; margin-top: 16px;"></div>
+		`
 		document.getElementById('moon').innerHTML = moonHTML
-
-		// 🌕 DRAW MOON SVG
 		drawMoonIcon(data.illumination)
 
-		// 🌊 TIDE INFO
+		// Tide Info
 		const tideFeet = (data.tide.height_m * 3.28084).toFixed(2)
 		let tideHTML = `
-      <h2>${icon('wave-sine')}Next Tide</h2>
-      <p><strong>${data.tide.next_type}</strong> at ${data.tide.next_time}</p>
-      <p>${icon('hourglass')}Next tide in: ${getTideCountdown(
+		  <h2>${icon('wave-sine')}Next Tide</h2>
+		  <p><strong>${data.tide.next_type}</strong> at ${data.tide.next_time}</p>
+		  <p>${icon('hourglass')}Next tide in: ${getTideCountdown(
 			data.tide.next_time
 		)}</p>
-      <p>${icon('ruler')}Height: ${data.tide.height_m.toFixed(
+		  <p>${icon('ruler')}Height: ${data.tide.height_m.toFixed(
 			2
 		)} m / ${tideFeet} ft</p>
-      <p>${icon('arrows-clockwise')}State: ${data.tide.state} ${
+		  <p>${icon('arrows-clockwise')}State: ${data.tide.state} ${
 			data.tide.state === 'Rising'
 				? '🔼'
 				: data.tide.state === 'Falling'
 				? '🔽'
 				: ''
 		}</p>
-    `
+		`
 
 		if (data.tide.water_temp !== undefined) {
 			tideHTML += `<p>${icon('thermometer')}Water Temp: ${
@@ -113,12 +107,12 @@ fetch('moonpocket-data.json')
 
 		document.getElementById('tide').innerHTML = tideHTML
 
-		// 📍 LOCATION INFO
+		// Location Info
 		if (data.city && data.state) {
 			document.getElementById('time').innerHTML += `
-        <p>${icon('map-pin')}Location: ${data.city}, ${data.state}</p>
-        <p>${icon('globe')}Lat: ${data.latitude}, Lon: ${data.longitude}</p>
-      `
+			  <p>${icon('map-pin')}Location: ${data.city}, ${data.state}</p>
+			  <p>${icon('globe')}Lat: ${data.latitude}, Lon: ${data.longitude}</p>
+			`
 		}
 
 		updateTimeElement()
@@ -127,20 +121,19 @@ fetch('moonpocket-data.json')
 			.querySelectorAll('.section')
 			.forEach((el) => el.classList.add('loaded'))
 
-		// 🌙 Fun Facts & Quotes
+		// Facts & Quotes
 		const moonFacts = [
 			'There are more than 200 moons in our solar system.',
 			'Jupiter has the most moons — over 90 confirmed!',
-			'Ganymede (Jupiter’s moon) is the largest moon in the solar system — even bigger than Mercury.',
-			'The Moon is slowly drifting away from Earth by about 3.8 cm per year.',
-			'Our Moon always shows the same face to Earth due to tidal locking.',
-			'Some moons have geysers that shoot water into space — like Enceladus!',
+			'Ganymede is the largest moon in the solar system — even bigger than Mercury.',
+			'Our Moon is slowly drifting away from Earth at 3.8 cm per year.',
+			"The Moon has no atmosphere, so there's no weather or sound.",
+			'Titan, Saturn’s largest moon, has lakes of methane and a hazy sky.',
+			'The far side of the Moon looks very different from the side we see.',
 			'Moondust smells like spent gunpowder, according to Apollo astronauts.',
-			'The Moon has no atmosphere, which means no weather or sound.',
-			'Buzz Aldrin and Neil Armstrong left seismic sensors on the Moon to measure moonquakes.',
-			'The far side of the Moon is thicker and looks completely different from the near side.',
-			'Titan has lakes of liquid methane and a hazy orange sky.',
-			'Scientists believe the Moon formed from a giant collision between Earth and a Mars-sized body.',
+			"Triton orbits Neptune in reverse — it's likely a captured object.",
+			'The Moon’s gravity causes Earth’s ocean tides.',
+			'A day on the Moon lasts about 29.5 Earth days.',
 		]
 
 		const moonQuotes = [
@@ -148,18 +141,15 @@ fetch('moonpocket-data.json')
 			'“Everyone is a moon, and has a dark side which he never shows to anybody.” — Mark Twain',
 			"“Shoot for the Moon. Even if you miss, you'll land among the stars.” — Norman Vincent Peale",
 			'“With freedom, books, flowers, and the moon, who could not be happy?” — Oscar Wilde',
-			"“That's one small step for man, one giant leap for mankind.” — Neil Armstrong",
-			'“The Moon was so beautiful that the ocean held up a mirror.” — Ani DiFranco',
-			'“The Moon will guide you through the night with her brightness, but she will always dwell in the darkness, in order to be seen.” — Shannon L. Alder',
+			'“The Moon will guide you through the night with her brightness...” — Shannon L. Alder',
+			'“She used to tell me that a full moon was when wishes come true.” — Shannon A. Thompson',
 			'“We ran as if to meet the moon.” — Robert Frost',
-			'“Tell me the story about how the Sun loved the Moon so much he died every night to let her breathe.” — Anonymous',
-			'“The Moon is a loyal companion. It never leaves. It’s always there, watching, steadfast.” — Tahereh Mafi',
-			'“Do not swear by the moon, for she changes constantly.” — William Shakespeare',
+			'“The Moon rested above the rooftops, a lamp for the dreamers.” — Unknown',
+			'“The Moon is a loyal companion. It never leaves...” — Tahereh Mafi',
+			'“Do not swear by the moon, for she changes constantly.” — Shakespeare',
 		]
 
 		const factText = document.getElementById('fact-text')
-		const factBtn = document.getElementById('show-fact')
-		const quoteBtn = document.getElementById('show-quote')
 
 		function getRandom(arr) {
 			return arr[Math.floor(Math.random() * arr.length)]
@@ -175,17 +165,14 @@ fetch('moonpocket-data.json')
 			}, speed)
 		}
 
-		// Initial display
-		if (factText) typeText(getRandom(moonFacts), factText)
+		function showRandomQuoteOrFact() {
+			const isQuote = Math.random() < 0.5
+			const content = isQuote ? getRandom(moonQuotes) : getRandom(moonFacts)
+			typeText(content, factText)
+		}
 
-		// Event listeners
-		factBtn?.addEventListener('click', () => {
-			typeText(getRandom(moonFacts), factText)
-		})
-
-		quoteBtn?.addEventListener('click', () => {
-			typeText(getRandom(moonQuotes), factText)
-		})
+		showRandomQuoteOrFact()
+		setInterval(showRandomQuoteOrFact, 30000)
 	})
 	.catch((err) => {
 		console.error('❌ Error loading moonpocket-data.json:', err)
@@ -195,7 +182,6 @@ fetch('moonpocket-data.json')
 		document.getElementById('time').innerHTML = fallback
 	})
 
-// 🌕 SVG Moon Drawing Function
 function drawMoonIcon(illumination) {
 	const phase = illumination / 100
 	const isWaning = phase > 0.5
