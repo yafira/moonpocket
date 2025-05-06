@@ -1,34 +1,34 @@
 {
-	"timestamp": "Dec 31 06:59 PM",
-	"moon_phase": "WAXING_GIBBOUS",
-	"illumination": 69.7,
-	"distance_km": 398286,
-	"azimuth": 27.8,
-	"altitude": -35.7,
-	"moonrise": "14:22",
-	"moonset": "03:10",
-	"tide": {
-		"next_type": "high",
-		"next_time": "2025-05-06 04:19",
-		"height_m": 1.31,
-		"state": "Unknown",
-		"station": "The Battery, NY",
-		"upcoming": [
-			{
-				"type": "low",
-				"time": "2025-05-06 10:58",
-				"height_m": 0.14
-			},
-			{
-				"type": "high",
-				"time": "2025-05-06 17:01",
-				"height_m": 1.36
-			},
-			{
-				"type": "low",
-				"time": "2025-05-06 23:19",
-				"height_m": 0.27
-			}
-		]
-	}
+  "timestamp": "Dec 31 06:59 PM",
+  "moon_phase": "WAXING_GIBBOUS",
+  "illumination": 69.7,
+  "distance_km": 398307,
+  "azimuth": 29.9,
+  "altitude": -35.1,
+  "moonrise": "14:22",
+  "moonset": "03:10",
+  "tide": {
+    "next_type": "high",
+    "next_time": "2025-05-06 04:19",
+    "height_m": 1.31,
+    "state": "Unknown",
+    "station": "The Battery, NY",
+    "upcoming": [
+      {
+        "type": "low",
+        "time": "2025-05-06 10:58",
+        "height_m": 0.14
+      },
+      {
+        "type": "high",
+        "time": "2025-05-06 17:01",
+        "height_m": 1.36
+      },
+      {
+        "type": "low",
+        "time": "2025-05-06 23:19",
+        "height_m": 0.27
+      }
+    ]
+  }
 }
