@@ -107,6 +107,20 @@ p strong {
 	font-weight: 600;
 }
 
+svg text {
+	font-family: 'Quicksand', sans-serif;
+	font-size: 10px;
+}
+
+svg circle {
+	transition: fill 0.3s ease;
+}
+
+svg circle:hover {
+	fill: #f6c8f3;
+	cursor: pointer;
+}
+
 #moon-fact {
 	background: rgba(255, 255, 255, 0.04);
 	font-style: italic;

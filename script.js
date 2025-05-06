@@ -42,6 +42,39 @@ function icon(name, size = 20) {
 	return `<iconify-icon icon="ph:${name}" style="font-size: ${size}px; vertical-align: -3px; margin-right: 6px;"></iconify-icon>`
 }
 
+// ✅ NEW: Draw Tide Graph
+function drawTideGraph(upcomingTides) {
+	const container = document.createElement('div')
+	container.style.marginTop = '16px'
+	container.style.display = 'flex'
+	container.style.justifyContent = 'center'
+
+	const maxHeight = Math.max(...upcomingTides.map((t) => t.height_m))
+	const svgWidth = 240
+	const svgHeight = 100
+	const barWidth = svgWidth / upcomingTides.length
+
+	let bars = ''
+	upcomingTides.forEach((tide, i) => {
+		const barHeight = (tide.height_m / maxHeight) * (svgHeight - 20)
+		const x = i * barWidth
+		const y = svgHeight - barHeight
+		const color = tide.type === 'high' ? '#4fd1c5' : '#f6ad55'
+		bars += `<rect x="${x}" y="${y}" width="${
+			barWidth - 4
+		}" height="${barHeight}" fill="${color}" />`
+	})
+
+	const svg = `
+    <svg width="${svgWidth}" height="${svgHeight}">
+      ${bars}
+    </svg>
+  `
+	container.innerHTML = svg
+	document.getElementById('tide').appendChild(container)
+}
+
+// 🟡 Main Data Fetch
 fetch('moonpocket-data.json')
 	.then((res) => res.json())
 	.then((data) => {
@@ -107,6 +140,11 @@ fetch('moonpocket-data.json')
 
 		document.getElementById('tide').innerHTML = tideHTML
 
+		// ✅ NEW: Draw tide graph after rendering tide HTML
+		if (Array.isArray(data.tide.upcoming) && data.tide.upcoming.length > 0) {
+			drawTideGraph(data.tide.upcoming)
+		}
+
 		// Location Info
 		if (data.city && data.state) {
 			document.getElementById('time').innerHTML += `
@@ -121,7 +159,7 @@ fetch('moonpocket-data.json')
 			.querySelectorAll('.section')
 			.forEach((el) => el.classList.add('loaded'))
 
-		// Facts & Quotes
+		// Quotes/Facts
 		const moonFacts = [
 			'There are more than 200 moons in our solar system.',
 			'Jupiter has the most moons — over 90 confirmed!',
@@ -202,4 +240,84 @@ function drawMoonIcon(illumination) {
     </svg>
   `
 	document.getElementById('moon-svg').innerHTML = svg
+}
+
+function drawTideGraph(upcomingTides) {
+	const svgWidth = 300
+	const svgHeight = 160 // Extra space for labels
+	const padding = 30
+	const labelPadding = 40
+
+	const maxHeight = Math.max(...upcomingTides.map((t) => t.height_m))
+	const minHeight = Math.min(...upcomingTides.map((t) => t.height_m))
+	const heightRange = maxHeight - minHeight || 1
+
+	const points = upcomingTides.map((tide, i) => {
+		const x =
+			padding + (i / (upcomingTides.length - 1)) * (svgWidth - 2 * padding)
+		const y =
+			labelPadding +
+			(1 - (tide.height_m - minHeight) / heightRange) *
+				(svgHeight - labelPadding - 30)
+		return { x, y, height: tide.height_m, time: new Date(tide.time) }
+	})
+
+	// Create smooth path
+	let path = `M ${points[0].x},${points[0].y} `
+	for (let i = 0; i < points.length - 1; i++) {
+		const p0 = points[i]
+		const p1 = points[i + 1]
+		const cx = (p0.x + p1.x) / 2
+		path += `C ${cx},${p0.y} ${cx},${p1.y} ${p1.x},${p1.y} `
+	}
+
+	// Circles for each tide
+	const circles = points
+		.map((p, i) => {
+			const color = upcomingTides[i].type === 'high' ? '#72ecff' : '#6eff86'
+			return `<circle cx="${p.x}" cy="${p.y}" r="3" fill="${color}" />`
+		})
+		.join('\n')
+
+	// Time labels (X-axis)
+	const timeLabels = points
+		.map((p) => {
+			const timeStr = p.time.toLocaleTimeString([], {
+				hour: 'numeric',
+				minute: '2-digit',
+			})
+			return `<text x="${p.x}" y="${
+				svgHeight - 5
+			}" font-size="10" fill="#aaa" text-anchor="middle">${timeStr}</text>`
+		})
+		.join('\n')
+
+	// Height labels (Y-axis)
+	const labelSteps = 3
+	const heightLabels = Array.from({ length: labelSteps + 1 }, (_, i) => {
+		const value = maxHeight - (i / labelSteps) * heightRange
+		const y = labelPadding + (i / labelSteps) * (svgHeight - labelPadding - 30)
+		return `<text x="4" y="${
+			y + 4
+		}" font-size="10" fill="#aaa" text-anchor="start">${value.toFixed(
+			2
+		)}m</text>`
+	}).join('\n')
+
+	// SVG composition
+	const svg = `
+    <svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}">
+      ${heightLabels}
+      <path d="${path}" fill="none" stroke="#00c0ff" stroke-width="2" />
+      ${circles}
+      ${timeLabels}
+    </svg>
+  `
+
+	const container = document.createElement('div')
+	container.style.display = 'flex'
+	container.style.justifyContent = 'center'
+	container.style.marginTop = '16px'
+	container.innerHTML = svg
+	document.getElementById('tide').appendChild(container)
 }
