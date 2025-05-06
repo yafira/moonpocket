@@ -19,6 +19,12 @@ body {
 	max-width: 600px;
 	margin: 0 auto;
 	padding: 40px 20px;
+	width: 100%; /* ← add this */
+}
+
+svg {
+	max-width: 100%;
+	height: auto;
 }
 
 h1 {
@@ -128,4 +134,51 @@ p strong {
 	padding: 20px;
 	display: inline-block;
 	margin: 0 auto;
+}
+
+/* MOBILE QUERIES */
+@media screen and (max-width: 600px) {
+	body {
+		font-size: 16px;
+		padding: 0 10px;
+	}
+
+	.container {
+		padding: 20px 10px;
+	}
+
+	h1 {
+		font-size: 1.8rem;
+	}
+
+	h2 {
+		font-size: 1.4rem;
+	}
+
+	h3 {
+		font-size: 1.2rem;
+	}
+
+	p {
+		font-size: 0.95rem;
+	}
+
+	.moon-icon-container {
+		width: 100px;
+		height: 100px;
+	}
+
+	#moon-svg svg {
+		max-width: 150px;
+	}
+
+	#moon-fact p {
+		font-size: 1.1rem;
+		padding: 14px;
+	}
+
+	.section {
+		padding: 16px;
+		margin-bottom: 16px;
+	}
 }
