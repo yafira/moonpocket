@@ -103,3 +103,34 @@ p strong {
 	color: #6eff86;
 	font-weight: 600;
 }
+
+#moon-fact {
+	background: rgba(255, 255, 255, 0.04);
+	font-style: italic;
+	color: #e0dbff;
+	transition: all 0.3s ease;
+}
+
+#moon-fact p {
+	font-size: 1.05rem;
+	line-height: 1.5;
+	margin-top: 10px;
+	min-height: 3em;
+	white-space: pre-wrap;
+}
+
+#moon-fact button {
+	background: rgba(255, 255, 255, 0.08);
+	border: none;
+	color: #ffd86e;
+	font-family: 'Space Mono', monospace;
+	padding: 8px 14px;
+	border-radius: 8px;
+	margin: 0 6px;
+	cursor: pointer;
+	transition: background 0.2s ease;
+}
+
+#moon-fact button:hover {
+	background: rgba(255, 255, 255, 0.12);
+}

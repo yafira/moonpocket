@@ -62,7 +62,7 @@ fetch('moonpocket-data.json')
     `
 		document.getElementById('moon').innerHTML = moonHTML
 
-		// 🌕 DRAW LARGER SVG MOON
+		// 🌕 DRAW MOON SVG
 		drawMoonIcon(data.illumination)
 
 		// 🌊 TIDE INFO
@@ -109,55 +109,9 @@ fetch('moonpocket-data.json')
 					tide.time
 				} – ${tide.height_m.toFixed(2)} m / ${feet} ft</p>`
 			})
-
-			// 📈 Add canvas for chart
-			tideHTML += `<canvas id="tideChart" width="300" height="150" style="margin-top: 16px;"></canvas>`
 		}
 
 		document.getElementById('tide').innerHTML = tideHTML
-
-		// 📈 CHART.JS: Render Tide Chart
-		if (Array.isArray(data.tide.upcoming)) {
-			const tideLabels = data.tide.upcoming.map((t) => t.time)
-			const tideHeights = data.tide.upcoming.map((t) => t.height_m.toFixed(2))
-
-			const ctx = document.getElementById('tideChart')?.getContext('2d')
-			if (ctx) {
-				new Chart(ctx, {
-					type: 'line',
-					data: {
-						labels: tideLabels,
-						datasets: [
-							{
-								label: 'Tide Height (m)',
-								data: tideHeights,
-								fill: false,
-								borderColor: '#00c2ff',
-								backgroundColor: '#00c2ff',
-								tension: 0.3,
-								pointRadius: 4,
-								pointHoverRadius: 6,
-							},
-						],
-					},
-					options: {
-						responsive: true,
-						scales: {
-							y: {
-								beginAtZero: true,
-								title: { display: true, text: 'Height (m)' },
-							},
-							x: {
-								title: { display: true, text: 'Time' },
-							},
-						},
-						plugins: {
-							legend: { display: false },
-						},
-					},
-				})
-			}
-		}
 
 		// 📍 LOCATION INFO
 		if (data.city && data.state) {
@@ -172,6 +126,66 @@ fetch('moonpocket-data.json')
 		document
 			.querySelectorAll('.section')
 			.forEach((el) => el.classList.add('loaded'))
+
+		// 🌙 Fun Facts & Quotes
+		const moonFacts = [
+			'There are more than 200 moons in our solar system.',
+			'Jupiter has the most moons — over 90 confirmed!',
+			'Ganymede (Jupiter’s moon) is the largest moon in the solar system — even bigger than Mercury.',
+			'The Moon is slowly drifting away from Earth by about 3.8 cm per year.',
+			'Our Moon always shows the same face to Earth due to tidal locking.',
+			'Some moons have geysers that shoot water into space — like Enceladus!',
+			'Moondust smells like spent gunpowder, according to Apollo astronauts.',
+			'The Moon has no atmosphere, which means no weather or sound.',
+			'Buzz Aldrin and Neil Armstrong left seismic sensors on the Moon to measure moonquakes.',
+			'The far side of the Moon is thicker and looks completely different from the near side.',
+			'Titan has lakes of liquid methane and a hazy orange sky.',
+			'Scientists believe the Moon formed from a giant collision between Earth and a Mars-sized body.',
+		]
+
+		const moonQuotes = [
+			'“The Moon is a friend for the lonesome to talk to.” — Carl Sandburg',
+			'“Everyone is a moon, and has a dark side which he never shows to anybody.” — Mark Twain',
+			"“Shoot for the Moon. Even if you miss, you'll land among the stars.” — Norman Vincent Peale",
+			'“With freedom, books, flowers, and the moon, who could not be happy?” — Oscar Wilde',
+			"“That's one small step for man, one giant leap for mankind.” — Neil Armstrong",
+			'“The Moon was so beautiful that the ocean held up a mirror.” — Ani DiFranco',
+			'“The Moon will guide you through the night with her brightness, but she will always dwell in the darkness, in order to be seen.” — Shannon L. Alder',
+			'“We ran as if to meet the moon.” — Robert Frost',
+			'“Tell me the story about how the Sun loved the Moon so much he died every night to let her breathe.” — Anonymous',
+			'“The Moon is a loyal companion. It never leaves. It’s always there, watching, steadfast.” — Tahereh Mafi',
+			'“Do not swear by the moon, for she changes constantly.” — William Shakespeare',
+		]
+
+		const factText = document.getElementById('fact-text')
+		const factBtn = document.getElementById('show-fact')
+		const quoteBtn = document.getElementById('show-quote')
+
+		function getRandom(arr) {
+			return arr[Math.floor(Math.random() * arr.length)]
+		}
+
+		function typeText(text, targetEl, speed = 25) {
+			let i = 0
+			targetEl.textContent = ''
+			const interval = setInterval(() => {
+				targetEl.textContent += text.charAt(i)
+				i++
+				if (i >= text.length) clearInterval(interval)
+			}, speed)
+		}
+
+		// Initial display
+		if (factText) typeText(getRandom(moonFacts), factText)
+
+		// Event listeners
+		factBtn?.addEventListener('click', () => {
+			typeText(getRandom(moonFacts), factText)
+		})
+
+		quoteBtn?.addEventListener('click', () => {
+			typeText(getRandom(moonQuotes), factText)
+		})
 	})
 	.catch((err) => {
 		console.error('❌ Error loading moonpocket-data.json:', err)
@@ -181,25 +195,25 @@ fetch('moonpocket-data.json')
 		document.getElementById('time').innerHTML = fallback
 	})
 
-// 🌕 SVG Moon Drawing Function (BIGGER + SEPARATE CONTAINER)
+// 🌕 SVG Moon Drawing Function
 function drawMoonIcon(illumination) {
 	const phase = illumination / 100
 	const isWaning = phase > 0.5
 	const arcOffset = 50 * (1 - Math.abs(0.5 - phase) * 2)
 
 	const svg = `
-  <svg viewBox="0 0 100 100" style="width: 100%; max-width: 200px; height: auto;">
-    <defs>
-      <mask id="moon-mask">
-        <rect width="100" height="100" fill="white"/>
-        <ellipse cx="${
-					isWaning ? 50 + arcOffset : 50 - arcOffset
-				}" cy="50" rx="50" ry="50" fill="black"/>
-      </mask>
-    </defs>
-    <circle cx="50" cy="50" r="50" fill="#fdfdfd" />
-    <circle cx="50" cy="50" r="50" fill="#0a0a23" mask="url(#moon-mask)" />
-  </svg>
+    <svg viewBox="0 0 100 100" style="width: 100%; max-width: 200px; height: auto;">
+      <defs>
+        <mask id="moon-mask">
+          <rect width="100" height="100" fill="white"/>
+          <ellipse cx="${
+						isWaning ? 50 + arcOffset : 50 - arcOffset
+					}" cy="50" rx="50" ry="50" fill="black"/>
+        </mask>
+      </defs>
+      <circle cx="50" cy="50" r="50" fill="#fdfdfd" />
+      <circle cx="50" cy="50" r="50" fill="#0a0a23" mask="url(#moon-mask)" />
+    </svg>
   `
 	document.getElementById('moon-svg').innerHTML = svg
 }
